@@ -2501,7 +2501,7 @@ MonoBehaviour:
   m_VerticalAxis:
     Value: 0
     m_SpeedMode: 0
-    m_MaxSpeed: 300
+    m_MaxSpeed: 150
     m_AccelTime: 0.1
     m_DecelTime: 0.1
     m_InputAxisName: Mouse Y
@@ -2525,7 +2525,7 @@ MonoBehaviour:
   m_HorizontalAxis:
     Value: 0
     m_SpeedMode: 0
-    m_MaxSpeed: 300
+    m_MaxSpeed: 150
     m_AccelTime: 0.1
     m_DecelTime: 0.1
     m_InputAxisName: Mouse X
@@ -13191,6 +13191,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 35355933510252253, guid: 8a28435b521a95848be2ddbd4f22bea3, type: 3}
+      propertyPath: lookSensitivity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 35355933510252253, guid: 8a28435b521a95848be2ddbd4f22bea3, type: 3}
+      propertyPath: webglLookSensitivityMultiplier
+      value: 0.001
+      objectReference: {fileID: 0}
     - target: {fileID: 1298532279833950047, guid: 8a28435b521a95848be2ddbd4f22bea3, type: 3}
       propertyPath: m_Height
       value: 2
