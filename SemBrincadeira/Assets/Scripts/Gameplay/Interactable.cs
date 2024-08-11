@@ -1,37 +1,62 @@
+using System;
 using FPHorror.Gameplay;
 using FPHorror.Gameplay.Player;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace FPHorror.Trigger
 {
     [RequireComponent(typeof(Collider))]
     public class Interactable : MonoBehaviour
     {
+        [FormerlySerializedAs("additionalScript")]
         [Tooltip("Script adicional a ser ativado quando interagir")]
-        public MonoBehaviour additionalScript;
+        [SerializeField]
+        private BaseTrigger trigger;
 
         [Tooltip("Mensagem a ser exibida quando o pickup não está no inventário")]
-        public string messageIfNotInInventory;
+        [SerializeField]
+        private string messageIfNotInInventory;
+        
+        [Tooltip("Pickup necessário para interagir")]
+        [SerializeField]
+        private Pickup pickup;
 
         private bool _hasInteracted;
         private Inventory _playerInventory;
 
+        private PlayerCharacterController playerController;
+        private bool ready = false;
+
         private void Start()
         {
-            // Certifique-se de que o script adicional está desativado no início
-            if (additionalScript != null)
+            playerController = FindObjectOfType<PlayerCharacterController>();
+            _playerInventory = FindObjectOfType<Inventory>();
+        }
+
+        private void Update()
+        {
+            if (playerController.ReadyToInteract && ready)
             {
-                additionalScript.enabled = false;
+                HandleInteraction();
             }
         }
 
+
         private void OnTriggerEnter(Collider other)
         {
-            var playerController = other.GetComponent<PlayerCharacterController>();
-            if (playerController != null)
+            if (other.CompareTag("Player"))
             {
-                _playerInventory = playerController.GetComponent<Inventory>();
-                HandleInteraction();
+                ready = true;
+            }
+        }
+        
+        
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                ready = false;
             }
         }
 
@@ -42,12 +67,12 @@ namespace FPHorror.Trigger
 
             var hasPickup = _playerInventory.HasPickup();
 
-            if (hasPickup)
+            if (hasPickup && pickup.IsInInventory)
             {
                 // Ativa o script adicional
-                if (additionalScript != null)
+                if (trigger != null)
                 {
-                    additionalScript.enabled = true;
+                    trigger.ActivateTrigger();
                 }
             }
             else

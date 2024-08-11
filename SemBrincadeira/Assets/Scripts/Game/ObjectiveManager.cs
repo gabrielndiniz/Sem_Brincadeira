@@ -8,7 +8,7 @@ namespace FPHorror.Game
     {
         public AllObjectivesCompletedEvent OnAllObjectivesCompleted = new AllObjectivesCompletedEvent();
 
-        private int totalObjectives = 3; // Suponha que existam 3 objetivos
+        private int totalObjectives = 2; // Suponha que existam 3 objetivos
         private int completedObjectives = 0;
 
         public void CompleteObjective()
@@ -16,6 +16,7 @@ namespace FPHorror.Game
             completedObjectives++;
             if (completedObjectives >= totalObjectives)
             {
+                Debug.Log("All Objectives completed!");
                 OnAllObjectivesCompleted.Invoke();
             }
         }

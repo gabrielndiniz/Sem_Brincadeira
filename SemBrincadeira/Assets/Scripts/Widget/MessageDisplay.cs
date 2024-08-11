@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
 
 namespace FPHorror.Widget
 {
     public class MessageDisplay : MonoBehaviour
     {
-        [SerializeField] private Text messageText;
+        [SerializeField] private TextMeshProUGUI messageText;
         [SerializeField] private Image background;
         [SerializeField] private float fadeSpeed = 2f;
 

@@ -1,5 +1,6 @@
 using FPHorror.Gameplay.Player;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace FPHorror.Gameplay
@@ -7,6 +8,9 @@ namespace FPHorror.Gameplay
     [RequireComponent(typeof(Collider))]
     public class Pickup : MonoBehaviour
     {
+        [FormerlySerializedAs("_cameraTransform")] [SerializeField]
+        private Transform pickupTransform;
+        
         [Tooltip("Quantidade de vida para regenerar por segundo")]
         public float regenerationAmountPerSecond = 5f;
 
@@ -26,13 +30,29 @@ namespace FPHorror.Gameplay
         private float _regenerationTimer = 0f;
         private Health _playerHealth;
         private Inventory _playerInventory;
-        private Transform _cameraTransform;
         private CanvasGroup _uiBackground;
+
+        private PlayerCharacterController playerController;
+        
+
+        public bool IsInInventory
+        {
+            get => _isInInventory;
+            set => _isInInventory = value;
+        }
 
         private void Start()
         {
-            _cameraTransform = Camera.main.transform;
+
             _uiBackground = FindObjectOfType<CanvasGroup>(); // Assumindo que há um único CanvasGroup no jogo
+            if (_uiBackground != null)
+            {
+                _uiBackground.alpha = 0f;
+            }
+            else
+            {
+                Debug.LogError("No CanvasGroup found in the scene. Make sure there's a CanvasGroup component.");
+            }
             if (_uiBackground != null)
             {
                 _uiBackground.alpha = 0f;
@@ -43,12 +63,10 @@ namespace FPHorror.Gameplay
         {
             if (_isBeingHeld)
             {
-                // Atualiza a posição do pickup para ficar na frente da câmera
-                transform.position = _cameraTransform.position + _cameraTransform.forward * 2f;
-                transform.rotation = Quaternion.LookRotation(_cameraTransform.forward);
+                transform.position = pickupTransform.position + pickupTransform.forward * 2f;
+                transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x+17, transform.rotation.eulerAngles.y+17,transform.rotation.eulerAngles.z+ 17);
 
-                // Espera pela interação do jogador
-                if (Input.GetMouseButtonDown(0)) // Botão esquerdo do mouse
+                if (playerController.ReadyToInteract) // Botão esquerdo do mouse
                 {
                     if (!_isInInventory)
                     {
@@ -60,19 +78,22 @@ namespace FPHorror.Gameplay
                     }
                 }
             }
+
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            var playerController = other.GetComponent<PlayerCharacterController>();
+            playerController = other.GetComponent<PlayerCharacterController>();
             if (playerController != null)
             {
+                
                 _playerInventory = playerController.GetComponent<Inventory>();
                 if (_playerInventory != null)
                 {
                     _playerHealth = playerController.GetComponent<Health>();
                     ShowPickupOnScreen();
                 }
+                
             }
         }
 
@@ -86,8 +107,8 @@ namespace FPHorror.Gameplay
             // Mostra o efeito de brilho piscante
             if (flickerEffectPrefab != null)
             {
-                _uiFlickerEffect = Instantiate(flickerEffectPrefab, _cameraTransform.position, Quaternion.identity);
-                _uiFlickerEffect.transform.SetParent(_cameraTransform);
+                _uiFlickerEffect = Instantiate(flickerEffectPrefab, pickupTransform.position, Quaternion.identity);
+                _uiFlickerEffect.transform.SetParent(pickupTransform);
             }
 
             // Pausa o jogo
@@ -100,6 +121,10 @@ namespace FPHorror.Gameplay
 
         private void RemoveFromScreen()
         {
+            if (!playerController.ReadyToInteract)
+            {
+                return;
+            }
             // Adiciona ao inventário
             if (_playerInventory != null)
             {
@@ -126,6 +151,10 @@ namespace FPHorror.Gameplay
 
         private void AddToInventory()
         {
+            if (!playerController.ReadyToInteract)
+            {
+                return;
+            }
             // Adiciona o objeto ao inventário
             if (_playerInventory != null)
             {

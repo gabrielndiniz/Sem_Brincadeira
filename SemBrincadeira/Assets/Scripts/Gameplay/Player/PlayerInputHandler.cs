@@ -73,6 +73,17 @@ namespace FPHorror.Gameplay.Player
             return false;
         }
 
+
+        public bool GetInteractInputRelease()
+        {
+            if (CanProcessInput())
+            {
+                return Input.GetButtonUp(GameConstants.k_ButtonNameInteract);
+            }
+
+            return false;
+        }
+
         public bool GetDodgeInputDown()
         {
             if (CanProcessInput())

@@ -1,7 +1,11 @@
 using FPHorror.Gameplay;
+using FPHorror.Gameplay.Player;
 using FPHorror.Widget;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
+
 
 namespace FPHorror.Game
 {
@@ -23,6 +27,7 @@ namespace FPHorror.Game
 
         [Tooltip("Win game message")]
         public string WinGameMessage = "You are safe!";
+
         [Tooltip("Duration of delay before the win message")]
         public float DelayBeforeWinMessage = 2f;
 
@@ -35,19 +40,35 @@ namespace FPHorror.Game
 
         [Tooltip("Lose game message")]
         public string LoseGameMessage = "You Died!";
+
         [Tooltip("Duration of delay before the lose message")]
         public float DelayBeforeLoseMessage = 1f;
 
         public bool GameIsEnding { get; private set; }
+
         private ObjectiveManager objectiveManager;
 
         float m_TimeLoadEndGameScene;
         string m_SceneToLoad;
+        
+        public CanvasGroup endGameCanvasGroup;
+        public TextMeshProUGUI endGameText;
 
         void Awake()
         {
             EventManager.AddListener<AllObjectivesCompletedEvent>(OnAllObjectivesCompleted);
             EventManager.AddListener<PlayerDeathEvent>(OnPlayerDeath);
+        }
+        
+        private void Start()
+        {
+            // Esconde o canvas no início
+            endGameCanvasGroup.alpha = 0f;
+            endGameCanvasGroup.interactable = false;
+            endGameCanvasGroup.blocksRaycasts = false;
+
+            // Obter o ObjectiveManager
+            objectiveManager = FindObjectOfType<ObjectiveManager>();
         }
 
         void Update()
@@ -71,11 +92,11 @@ namespace FPHorror.Game
 
         void EndGame(bool win)
         {
-            // unlocks the cursor before leaving the scene, to be able to click buttons
+            // Desbloqueia o cursor antes de sair da cena para poder clicar em botões
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            // Remember that we need to load the appropriate end scene after a delay
+            // Lembre-se de que precisamos carregar a cena final apropriada após um atraso
             GameIsEnding = true;
             EndGameFadeCanvasGroup.gameObject.SetActive(true);
 
@@ -84,7 +105,7 @@ namespace FPHorror.Game
                 m_SceneToLoad = WinSceneName;
                 m_TimeLoadEndGameScene = Time.time + EndSceneLoadDelay + DelayBeforeFadeToBlack;
 
-                // play a sound on win
+                // Toca um som de vitória
                 if (VictorySound != null)
                 {
                     var audioSource = gameObject.AddComponent<AudioSource>();
@@ -93,27 +114,30 @@ namespace FPHorror.Game
                     audioSource.PlayScheduled(AudioSettings.dspTime + DelayBeforeWinMessage);
                 }
 
-                // Display the win message
-                ShowMessage(WinGameMessage, true);
+                // Exibe a mensagem de vitória e mostra o canvas
+                ShowEndGameScreen(WinGameMessage, Color.white, Color.yellow);
             }
             else
             {
                 m_SceneToLoad = LoseSceneName;
                 m_TimeLoadEndGameScene = Time.time + EndSceneLoadDelay;
 
-                // Display the lose message
-                ShowMessage(LoseGameMessage, false);
+                // Exibe a mensagem de derrota e mostra o canvas
+                ShowEndGameScreen(LoseGameMessage, Color.black, Color.red);
             }
         }
 
-        void ShowMessage(string message, bool win)
+        void ShowEndGameScreen(string message, Color backgroundColor, Color textColor)
         {
-            // Supondo que você tenha um script de widget que exiba mensagens na tela
-            var widget = FindObjectOfType<MessageDisplay>();
-            if (widget != null)
-            {
-                widget.ShowMessage(message, win);
-            }
+            endGameCanvasGroup.alpha = 1f;
+            endGameCanvasGroup.interactable = true;
+            endGameCanvasGroup.blocksRaycasts = true;
+            endGameCanvasGroup.GetComponent<Image>().color = backgroundColor;
+            endGameText.text = message;
+            endGameText.color = textColor;
+
+            // Pausar o jogo ao exibir a tela de fim de jogo
+            Time.timeScale = 0f;
         }
 
         void OnDestroy()

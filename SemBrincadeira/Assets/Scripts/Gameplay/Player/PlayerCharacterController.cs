@@ -65,6 +65,8 @@ namespace FPHorror.Gameplay.Player
         
         private float nextFootstepTime = 0f;
 
+        private bool readyToInteract = false;
+
         public UnityAction<bool> OnStanceChanged;
 
         public Vector3 CharacterVelocity { get; set; }
@@ -149,6 +151,12 @@ namespace FPHorror.Gameplay.Player
             set => footstepSfx = value;
         }
 
+        public bool ReadyToInteract
+        {
+            get => readyToInteract;
+            set => readyToInteract = value;
+        }
+
         Health m_Health;
         PlayerInputHandler m_InputHandler;
         CharacterController m_CharacterController;
@@ -186,6 +194,7 @@ namespace FPHorror.Gameplay.Player
             HandleCrouchInput();
             HandleDodgeInput();
             MovePlayer();
+            HandleInteractInput();
         }
 
         private void HandleMovementInput()
@@ -260,7 +269,22 @@ namespace FPHorror.Gameplay.Player
 
         private void HandleDodgeInput()
         {
-            // Implement dodge handling here
+            if (m_InputHandler.GetDodgeInputDown())
+            {
+                // Implement dodge handling here
+            }
+        }
+
+        private void HandleInteractInput()
+        {
+            if (m_InputHandler.GetInteractInputDown())
+            {
+                readyToInteract = true;
+            }
+            if (m_InputHandler.GetInteractInputRelease())
+            {
+                readyToInteract = false;
+            }
         }
 
         private void MovePlayer()

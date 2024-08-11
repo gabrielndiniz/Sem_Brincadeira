@@ -1,4 +1,5 @@
 using System.Collections;
+using FPHorror.Game;
 using UnityEngine;
 
 namespace FPHorror.Trigger
@@ -8,8 +9,11 @@ namespace FPHorror.Trigger
         [Tooltip("Som que será tocado ao ativar o trigger.")]
         public AudioClip TriggerSound;
 
-        [Tooltip("Objeto que será movido ou modificado ao ativar o trigger.")]
-        public GameObject TargetObject;
+        [Tooltip("Objeto que será ativado ao ativar o trigger.")]
+        public GameObject TargetObjectToActivate;
+
+        [Tooltip("Objeto que será desativado ao ativar o trigger.")]
+        public GameObject TargetObjectToDeactivate;
 
         [Tooltip("Nova posição do objeto alvo após o trigger ser ativado.")]
         public Vector3 TargetPosition;
@@ -17,42 +21,29 @@ namespace FPHorror.Trigger
         [Tooltip("Duração da transição para a nova posição.")]
         public float TransitionDuration = 1f;
 
+        [SerializeField]
         private AudioSource audioSource;
         private Vector3 initialPosition;
 
-        protected virtual void Start()
+        public virtual void ActivateTrigger()
         {
-            if (TargetObject != null)
+            if (TargetObjectToActivate != null)
             {
-                initialPosition = TargetObject.transform.position;
+                TargetObjectToActivate.SetActive(true);
+            }
+            
+            if (TargetObjectToDeactivate != null)
+            {
+                TargetObjectToDeactivate.SetActive(false);
             }
 
-            if (TriggerSound != null)
+            if (TriggerSound != null && audioSource != null)
             {
-                audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.Stop();
                 audioSource.clip = TriggerSound;
-            }
-        }
-
-        protected virtual void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Player"))
-            {
-                ActivateTrigger();
-            }
-        }
-
-        protected virtual void ActivateTrigger()
-        {
-            if (TargetObject != null)
-            {
-                StartCoroutine(MoveObject(TargetObject, initialPosition, TargetPosition, TransitionDuration));
-            }
-
-            if (audioSource != null)
-            {
                 audioSource.Play();
             }
+            FindObjectOfType<ObjectiveManager>().CompleteObjective();
         }
 
         private IEnumerator MoveObject(GameObject obj, Vector3 start, Vector3 end, float duration)
