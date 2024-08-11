@@ -43,7 +43,7 @@ namespace FPHorror.Gameplay.Player
 
                 // Constrain move input to a maximum magnitude of 1, otherwise diagonal movement might exceed the max move speed defined
                 move = Vector3.ClampMagnitude(move, 1);
-
+                
                 return move;
             }
 

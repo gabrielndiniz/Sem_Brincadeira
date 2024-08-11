@@ -16,7 +16,7 @@ namespace FPHorror.Game
         public const string k_ButtonNameSprint = "Sprint";
 
         public const string k_ButtonNameGamepadInteract = "Gamepad Interact";
-        public const string k_ButtonNameGamepadDodge = "Gamepad Aim";
+        public const string k_ButtonNameGamepadDodge = "Gamepad Dodge";
         public const string k_ButtonNameGamepadCrouch = "Gamepad Crouch";
         public const string k_ButtonNameGamepadSprint = "Gamepad Sprint";
     }
