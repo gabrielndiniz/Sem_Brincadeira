@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 98903678148130239}
   - component: {fileID: 8389314825393942980}
   - component: {fileID: 7359417887087719589}
-  - component: {fileID: 7470772642100183628}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -63,13 +62,14 @@ MonoBehaviour:
   EndSceneLoadDelay: 3
   EndGameFadeCanvasGroup: {fileID: 0}
   WinSceneName: MainScene
-  DelayBeforeFadeToBlack: 4
+  DelayBeforeFadeToBlack: 2
   WinGameMessage: S A L V O
   DelayBeforeWinMessage: 2
-  VictorySound: {fileID: 8300000, guid: 5af3346ed54784242813dc6085c97324, type: 3}
   LoseSceneName: MainScene
   LoseGameMessage: M O R T E
   DelayBeforeLoseMessage: 2
+  endGameCanvasGroup: {fileID: 0}
+  endGameText: {fileID: 0}
 --- !u!114 &8389314825393942980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,19 +94,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae538d4c6d565c489dfd29f86fdac63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7470772642100183628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1083391627895697717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 342445597fd5b184fb69766224d4f24b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  musicSource: {fileID: 0}
-  sfxSource: {fileID: 0}
-  musicVolume: 1
-  sfxVolume: 1

@@ -31,7 +31,7 @@ namespace FPHorror.Gameplay.Player
 
         public bool CanProcessInput()
         {
-            return Cursor.lockState == CursorLockMode.Locked && !gameFlowManager.GameIsEnding;
+            return Cursor.lockState == CursorLockMode.Locked; //&& !gameFlowManager.GameIsEnding;
         }
 
         public Vector3 GetMoveInput()

@@ -6,7 +6,7 @@ namespace FPHorror.Game
 {
     public class ObjectiveManager : MonoBehaviour
     {
-        public AllObjectivesCompletedEvent OnAllObjectivesCompleted = new AllObjectivesCompletedEvent();
+        //public AllObjectivesCompletedEvent OnAllObjectivesCompleted = new AllObjectivesCompletedEvent();
 
         private int totalObjectives = 2; // Suponha que existam 3 objetivos
         private int completedObjectives = 0;
@@ -16,8 +16,8 @@ namespace FPHorror.Game
             completedObjectives++;
             if (completedObjectives >= totalObjectives)
             {
-                Debug.Log("All Objectives completed!");
-                OnAllObjectivesCompleted.Invoke();
+                //OnAllObjectivesCompleted.Invoke();
+                FindObjectOfType<GameFlowManager>().EndGame(true);
             }
         }
     }
